@@ -2,13 +2,16 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 require("colors");
+const cors = require("cors");
 const ConnectMongoDB = require("./database/dbConnect");
 const auth = require("./routes/auth");
 const errorHandler = require("./middlewares/errorHandler");
 
 ConnectMongoDB.getConnection();
 
+process.env.NODE_ENV === "production" ? null : app.use(cors());
 app.use(express.json());
+
 app.use("/api/v1/auth", auth);
 
 app.use(errorHandler);
