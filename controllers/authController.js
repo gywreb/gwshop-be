@@ -22,5 +22,10 @@ exports.login = asyncMiddleware(async (req, res, next) => {
     return next(new ErrorResponse(400, { password: "Password is incorrect!" }));
   const { _id, name, gender, isActive } = user;
   const token = User.genJwt({ _id, name, email, gender, isActive });
-  res.status(200).json(new SuccessResponse(200, { token }));
+  res.status(200).json(
+    new SuccessResponse(200, {
+      user: { _id, name, email, gender, isActive },
+      token,
+    })
+  );
 });
