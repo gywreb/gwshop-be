@@ -29,3 +29,10 @@ exports.login = asyncMiddleware(async (req, res, next) => {
     })
   );
 });
+
+exports.getCurrentUser = (req, res, next) => {
+  const { name, email, gender, isActive } = req.user;
+  res
+    .status(200)
+    .json(new SuccessResponse(200, { name, email, gender, isActive }));
+};
