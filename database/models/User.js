@@ -32,6 +32,10 @@ const UserSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    photoUrl: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

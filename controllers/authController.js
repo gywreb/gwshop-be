@@ -2,6 +2,7 @@ const User = require("../database/models/User");
 const asyncMiddleware = require("../middlewares/asyncMiddleware");
 const ErrorResponse = require("../models/ErrorResponse");
 const SuccessResponse = require("../models/SuccessResponse");
+const _ = require("lodash");
 
 exports.register = asyncMiddleware(async (req, res, next) => {
   const { name, email, password, gender } = req.body;
@@ -20,19 +21,18 @@ exports.login = asyncMiddleware(async (req, res, next) => {
   const isMatch = await user.passwordValidation(password);
   if (!isMatch)
     return next(new ErrorResponse(400, { password: "Password is incorrect!" }));
-  const { _id, name, gender, isActive } = user;
-  const token = User.genJwt({ _id, name, email, gender, isActive });
+
+  const payload = _.omit(user._doc, ["password", "__v"]);
+  const token = User.genJwt(payload);
   res.status(200).json(
     new SuccessResponse(200, {
-      user: { _id, name, email, gender, isActive },
+      user: payload,
       token,
     })
   );
 });
 
 exports.getCurrentUser = (req, res, next) => {
-  const { name, email, gender, isActive } = req.user;
-  res
-    .status(200)
-    .json(new SuccessResponse(200, { name, email, gender, isActive }));
+  const currentUser = _.omit(req.user._doc, ["password", "__v"]);
+  res.status(200).json(new SuccessResponse(200, currentUser));
 };
