@@ -32,6 +32,11 @@ exports.login = asyncMiddleware(async (req, res, next) => {
   );
 });
 
+exports.logout = (req, res, next) => {
+  delete req.user;
+  res.status(200).json(new SuccessResponse(200, "log out"));
+};
+
 exports.getCurrentUser = (req, res, next) => {
   const currentUser = _.omit(req.user._doc, ["password", "__v"]);
   res.status(200).json(new SuccessResponse(200, currentUser));
