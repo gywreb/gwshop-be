@@ -12,7 +12,7 @@ const basicAuth = async (req, res, next) => {
   if (!token) return next(new ErrorResponse(401, "you are unauthorized"));
 
   const decoded = new Buffer.from(token, "base64").toString();
-
+  console.log(decoded);
   if (
     !(
       `${process.env.BASICAUTH_USER}:${process.env.BASICAUTH_PASSWORD}` ===
